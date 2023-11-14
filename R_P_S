@@ -1,7 +1,7 @@
 import random
 
 class Player:
-    moves = ['rock', 'paper', 'scissors', 'lizard', 'spock']
+    moves = ['rock', 'paper', 'scissors']
 
     def __init__(self):
         self.my_move = None
@@ -21,7 +21,7 @@ class HumanPlayer(Player):
 
     def move(self):
         while True:
-            move = input('CHOOSE A MOVE: (rock / paper / scissors / lizard / spock)\n').lower()
+            move = input('CHOOSE A MOVE: (rock / paper / scissors)\n').lower()
             if self.validate_move(move):
                 return move
             else:
@@ -51,13 +51,12 @@ class ReflectPlayer(Player):
 
 class CyclePlayer(Player):
     behavior = 'Cycle Player'
+    move_index = 0
 
     def move(self):
-        if self.my_move is None:
-            return random.choice(self.moves)
-        else:
-            index = self.moves.index(self.my_move) + 1
-            return self.moves[0] if index == len(self.moves) else self.moves[index]
+        move = self.moves[self.move_index]
+        self.move_index = (self.move_index + 1) % len(self.moves)
+        return move
 
 
 class Game:
@@ -76,7 +75,7 @@ class Game:
             print('-- YOU WIN! --\n')
         elif self.play2_wins(move1, move2):
             self.player2.score += 1
-            print('-- F**K! --\n')
+            print('-- COMPUTER WINS! --\n')
         else:
             print("-- IT'S A TIE --\n")
 
@@ -87,8 +86,8 @@ class Game:
 
     def play_game(self):
         print('Game starts!\n')
-        for round in range(3):
-            print(f'Round {round + 1}:')
+        for _ in range(3):  # You can adjust the number of rounds here
+            print('Round:')
             self.play_round()
         print('Game over!\n\n')
         self.player1.score = 0
@@ -97,46 +96,27 @@ class Game:
     def play1_wins(self, one, two):
         return ((one == 'scissors' and two == 'paper') or
                 (one == 'paper' and two == 'rock') or
-                (one == 'rock' and two == 'lizard') or
-                (one == 'lizard' and two == 'spock') or
-                (one == 'spock' and two == 'scissors') or
-                (one == 'scissors' and two == 'lizard') or
-                (one == 'lizard' and two == 'paper') or
-                (one == 'paper' and two == 'spock') or
-                (one == 'spock' and two == 'rock') or
                 (one == 'rock' and two == 'scissors'))
 
     def play2_wins(self, one, two):
         return ((one == 'paper' and two == 'scissors') or
                 (one == 'rock' and two == 'paper') or
-                (one == 'lizard' and two == 'rock') or
-                (one == 'spock' and two == 'lizard') or
-                (one == 'scissors' and two == 'spock') or
-                (one == 'lizard' and two == 'scissors') or
-                (one == 'paper' and two == 'lizard') or
-                (one == 'spock' and two == 'paper') or
-                (one == 'rock' and two == 'spock') or
                 (one == 'scissors' and two == 'rock'))
 
 
 def start_new_game():
-    moves = ['rock', 'paper', 'scissors', 'lizard', 'spock']
     behaviors = {
         'human': HumanPlayer(),
-        'reflect': ReflectPlayer(),
-        'cycle': CyclePlayer(),
         'random': RandomPlayer(),
-        'repeat': RepeatPlayer()
+        'repeat': RepeatPlayer(),
+        'reflect': ReflectPlayer(),
+        'cycle': CyclePlayer()
     }
 
     while True:
-        print('ROCK, PAPER, SCISSORS, LIZARD, SPOCK - GO!\n')
-        print('Here are the rules of the game:\n'
-              'Scissors cuts paper. Paper covers rock. Rock crushes lizard. Lizard poisons Spock. '
-              'Spock smashes scissors. Scissors decapitates lizard. Lizard eats paper. Paper disproves Spock. '
-              'Spock vaporizes rock and as it always has, rock crushes scissors.\n')
+        print('ROCK, PAPER, SCISSORS - GO!\n')
 
-        choice = input('CHOOSE AN OPPONENT: (random / reflect / repeat / cycle / exit)\n').lower()
+        choice = input('CHOOSE AN OPPONENT: (random / repeat / reflect / cycle / exit)\n').lower()
 
         if choice == 'exit':
             break
