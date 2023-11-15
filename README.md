@@ -41,7 +41,7 @@ This project implements a text-based Rock, Paper, Scissors, Lizard, Spock game w
 3. Run the game:
 
     ```bash
-    python game.py
+    pythongame.py
     ```
 
 ## How to Play
