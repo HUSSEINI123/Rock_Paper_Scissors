@@ -15,6 +15,9 @@ class Player:
         self.my_move = my_move
         self.their_move = their_move
 
+    def remember(self):
+        pass
+
 
 class HumanPlayer(Player):
     behavior = 'Human Player'
@@ -34,6 +37,9 @@ class RandomPlayer(Player):
     def move(self):
         return random.choice(self.moves)
 
+    def remember(self):
+        pass
+
 
 class RepeatPlayer(Player):
     behavior = 'Repeat Player'
@@ -41,12 +47,18 @@ class RepeatPlayer(Player):
     def move(self):
         return 'rock'
 
+    def remember(self):
+        pass
+
 
 class ReflectPlayer(Player):
     behavior = 'Reflect Player'
 
     def move(self):
         return random.choice(self.moves) if self.their_move is None else self.their_move
+
+    def remember(self):
+        pass
 
 
 class CyclePlayer(Player):
@@ -57,6 +69,9 @@ class CyclePlayer(Player):
         move = self.moves[self.move_index]
         self.move_index = (self.move_index + 1) % len(self.moves)
         return move
+
+    def remember(self):
+        pass
 
 
 class Game:
@@ -81,15 +96,20 @@ class Game:
 
         self.player1.learn(move1, move2)
         self.player2.learn(move2, move1)
+        self.player1.remember()
+        self.player2.remember()
         print('       SCORE')
         print(f'Human: {self.player1.score} | {self.player2.behavior}: {self.player2.score}\n')
 
-    def play_game(self):
+    def play_game(self, rounds=3):
         print('Game starts!\n')
-        for _ in range(3):  # You can adjust the number of rounds here
+        for _ in range(rounds):
             print('Round:')
             self.play_round()
         print('Game over!\n\n')
+        print('FINAL SCORE:')
+        print(f'Human: {self.player1.score} | {self.player2.behavior}: {self.player2.score}')
+
         self.player1.score = 0
         self.player2.score = 0
 
