@@ -12,8 +12,7 @@ class Player:
         return move.lower() in self.moves
 
     def learn(self, my_move, their_move):
-        self.my_move = my_move
-        self.their_move = their_move
+        pass
 
     def remember(self):
         pass
@@ -24,7 +23,8 @@ class HumanPlayer(Player):
 
     def move(self):
         while True:
-            move = input('CHOOSE A MOVE: (rock / paper / scissors)\n').lower()
+            move = input(
+                'CHOOSE A MOVE: (rock / paper / scissors)\n').lower()
             if self.validate_move(move):
                 return move
             else:
@@ -35,7 +35,10 @@ class RandomPlayer(Player):
     behavior = 'Random Player'
 
     def move(self):
-        return random.choice(self.moves)
+        return self.their_move or random.choice(self.moves)
+
+    def learn(self, my_move, their_move):
+        pass
 
     def remember(self):
         pass
@@ -47,6 +50,9 @@ class RepeatPlayer(Player):
     def move(self):
         return 'rock'
 
+    def learn(self, my_move, their_move):
+        pass
+
     def remember(self):
         pass
 
@@ -55,7 +61,10 @@ class ReflectPlayer(Player):
     behavior = 'Reflect Player'
 
     def move(self):
-        return random.choice(self.moves) if self.their_move is None else self.their_move
+        return self.their_move or random.choice(self.moves)
+
+    def learn(self, my_move, their_move):
+        self.their_move = their_move
 
     def remember(self):
         pass
@@ -66,9 +75,12 @@ class CyclePlayer(Player):
     move_index = 0
 
     def move(self):
-        move = self.moves[self.move_index]
+        m = self.moves[self.move_index]
         self.move_index = (self.move_index + 1) % len(self.moves)
-        return move
+        return m
+
+    def learn(self, my_move, their_move):
+        pass
 
     def remember(self):
         pass
@@ -99,7 +111,9 @@ class Game:
         self.player1.remember()
         self.player2.remember()
         print('       SCORE')
-        print(f'Human: {self.player1.score} | {self.player2.behavior}: {self.player2.score}\n')
+        print(
+            f'Human: {self.player1.score} | {self.player2.behavior}: {self.player2.score}\n'
+        )
 
     def play_game(self, rounds=3):
         print('Game starts!\n')
@@ -108,20 +122,26 @@ class Game:
             self.play_round()
         print('Game over!\n\n')
         print('FINAL SCORE:')
-        print(f'Human: {self.player1.score} | {self.player2.behavior}: {self.player2.score}')
+        print(
+            f'Human: {self.player1.score} | {self.player2.behavior}: {self.player2.score}'
+        )
 
         self.player1.score = 0
         self.player2.score = 0
 
     def play1_wins(self, one, two):
-        return ((one == 'scissors' and two == 'paper') or
-                (one == 'paper' and two == 'rock') or
-                (one == 'rock' and two == 'scissors'))
+        return (
+            (one == 'scissors' and two == 'paper')
+            or (one == 'paper' and two == 'rock')
+            or (one == 'rock' and two == 'scissors')
+        )
 
     def play2_wins(self, one, two):
-        return ((one == 'paper' and two == 'scissors') or
-                (one == 'rock' and two == 'paper') or
-                (one == 'scissors' and two == 'rock'))
+        return (
+            (one == 'paper' and two == 'scissors')
+            or (one == 'rock' and two == 'paper')
+            or (one == 'scissors' and two == 'rock')
+        )
 
 
 def start_new_game():
@@ -130,13 +150,15 @@ def start_new_game():
         'random': RandomPlayer(),
         'repeat': RepeatPlayer(),
         'reflect': ReflectPlayer(),
-        'cycle': CyclePlayer()
+        'cycle': CyclePlayer(),
     }
 
     while True:
         print('ROCK, PAPER, SCISSORS - GO!\n')
 
-        choice = input('CHOOSE AN OPPONENT: (random / repeat / reflect / cycle / exit)\n').lower()
+        choice = input(
+            'CHOOSE AN OPPONENT: (random / repeat / reflect / cycle / exit)\n'
+        ).lower()
 
         if choice == 'exit':
             break
