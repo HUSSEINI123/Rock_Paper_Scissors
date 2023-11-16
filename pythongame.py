@@ -1,5 +1,6 @@
 import random
 
+
 class Player:
     moves = ['rock', 'paper', 'scissors']
 
@@ -112,7 +113,8 @@ class Game:
         self.player2.remember()
         print('       SCORE')
         print(
-            f'Human: {self.player1.score} | {self.player2.behavior}: {self.player2.score}\n'
+            f'Human: {self.player1.score} | {self.player2.behavior}: '
+            f'{self.player2.score}\n'
         )
 
     def play_game(self, rounds=3):
@@ -123,7 +125,8 @@ class Game:
         print('Game over!\n\n')
         print('FINAL SCORE:')
         print(
-            f'Human: {self.player1.score} | {self.player2.behavior}: {self.player2.score}'
+            f'Human: {self.player1.score} | {self.player2.behavior}: '
+            f'{self.player2.score}'
         )
 
         self.player1.score = 0
